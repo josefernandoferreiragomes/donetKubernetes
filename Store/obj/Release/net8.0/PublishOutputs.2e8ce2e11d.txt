@@ -1,0 +1,9 @@
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\Store.exe
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\appsettings.Development.json
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\appsettings.json
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\Store.dll
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\Store.deps.json
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\Store.runtimeconfig.json
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\Store.pdb
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\DataEntities.dll
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Store\bin\Release\net8.0\publish\DataEntities.pdb
