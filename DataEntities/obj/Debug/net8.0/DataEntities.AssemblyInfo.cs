@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataEntities")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ec4ca80bfbc58b2ecbc8b4b3aac9d517bd51d28")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataEntities")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataEntities")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

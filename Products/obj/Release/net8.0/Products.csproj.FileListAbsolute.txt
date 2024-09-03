@@ -251,3 +251,4 @@ C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloud
 C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Products\obj\Release\net8.0\Products.pdb
 C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Products\obj\Release\net8.0\Products.genruntimeconfig.cache
 C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Products\obj\Release\net8.0\ref\Products.dll
+C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\Products\obj\Release\net8.0\Products.sourcelink.json
