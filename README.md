@@ -52,6 +52,10 @@ upload, or push, the Docker images to Docker Hub:
 docker push josefernandoferreiragomes/storeimage
 docker push josefernandoferreiragomes/productservice
 ```
+#### Make sure your are on the right repo:
+```bash
+git remote show origin
+```
 ### 9. start minikube
 ###  use minikube to orchestrate the containers
 make sure to have installed minikube (kubectl)
