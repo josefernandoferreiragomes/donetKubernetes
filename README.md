@@ -129,3 +129,58 @@ kubectl scale --replicas=1 deployment/productsbackend
 
 ## References
 https://learn.microsoft.com/en-us/training/modules/dotnet-deploy-microservices-kubernetes/4-exercise-deploy-to-kubernetes
+
+# Resiliency approaches
+
+#### Retry
+#### Circuit Breaker
+### References
+https://learn.microsoft.com/en-us/training/modules/microservices-resiliency-aspnet-core/2-application-infrastructure-resiliency
+
+### Modify the app to add code-based resiliency handling policies in a microservice. 
+
+#### Add resiliency NuGet package:
+```bash
+dotnet add package Microsoft.Extensions.Http.Resilience
+```
+#### Add resiliency to the http client
+```csharp
+//(...)
+.AddStandardResilienceHandler()
+// further options added in Program.cs
+```
+
+#### List publish profiles
+```bash
+minikube profile list
+```
+
+#### Rebuild the app
+```bash
+dotnet publish /p:PublishProfile=DefaultContainer
+```
+
+#### Start only on docker, for simplified log access
+```bash
+docker compose up
+```
+#### Access the product list on store and make sure it works.
+
+#### Stop products service container, and try to access the products list again. And then review the store container logs:
+```bash
+eshoplite-frontend-1  | warn: Polly[3]
+eshoplite-frontend-1  |       Execution attempt. Source: 'ProductService-standard//Standard-Retry', Operation Key: '', Result: 'Name or service not known (backend:8080)', Handled: 'True', Attempt: '2', Execution Time: '27.2703'
+```
+
+### In case you want to do the test in minikube:
+### Re-publish the version to docker hub, and start minikube service and store services.
+
+#### Access the container inside minikube (in case needed)
+```bash
+kubectl exec --stdin --tty storefrontend-78fc97b957-lmsls -- /bin/bash
+```
+#### Access the container logs inside minikube
+```bash
+kubectl logs storefrontend-78fc97b957-lmsls
+```
+### Reconfigure Kubernetes deployment to implement an infrastructure-based resiliency
