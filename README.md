@@ -3,7 +3,7 @@
 ## Prerequisites
 - Docker installed
 - Docker Hub account
-- Minikube installed
+- k3d installed or alternatively Minikube 
 - kubectl installed
 
 ## Steps
@@ -56,8 +56,32 @@ docker push josefernandoferreiragomes/productservice
 ```bash
 git remote show origin
 ```
-### 9. start minikube
-###  use minikube to orchestrate the containers
+### 9. Configure and start kubernetes
+### In windows machine
+
+install kubectl
+```bash
+choco install kubernetes-cli -y
+```
+
+enable WSL2
+```bash
+wsl --set-default-version 2
+```
+
+install k3d, using chocolatery and then verify installation
+```bash
+choco install k3d -y
+
+k3d --version
+```
+
+### create k3d cluster
+```bash
+k3d cluster create devcluster --config k3d.yml
+```
+
+#### Alternatively, use minikube to orchestrate the containers
 make sure to have installed minikube (kubectl)
 ```bash
 minikube start
@@ -84,18 +108,27 @@ kubectl config get-contexts
 get pods
 ```bash
 kubectl get pods
-minikube kubectl -- get pods -A
 ```
+
+get minikube ip (minikube only)
+```
+minikube ip
+```
+
 get services
 ```bash
 kubectl get services --all-namespaces
 ```
-check status
+
+check status (minikube only)
 ```bash
 minikube status
 ```
 
-### 11. test the api
+### 11. Test the api in k3d, in the browser, concatenating localhost with the 
+http://localhost:32001/api/product
+
+#### alternatively, open tunnel and test the api (minikube only)
 ```bash
 minikube service productsbackend
 ```
@@ -108,7 +141,15 @@ Duplicate the terminal/open new terminal
 ```bash
 kubectl apply -f frontend-deploy.yml
 ```
-### 12. test the frontend
+
+### 12. test the frontend, in the browser
+```bash
+kubectl get services
+```
+the url should be something like:
+http://localhost:32000/
+
+#### alternatively, open tunnel and test the site (minikube only)
 ```bash
 minikube service storefrontend
 ```
@@ -175,6 +216,7 @@ docker compose up
 eshoplite-frontend-1  | warn: Polly[3]
 eshoplite-frontend-1  |       Execution attempt. Source: 'ProductService-standard//Standard-Retry', Operation Key: '', Result: 'Name or service not known (backend:8080)', Handled: 'True', Attempt: '2', Execution Time: '27.2703'
 ```
+it means the retries have ocurred
 
 ### In case you want to do the test in minikube:
 ### Re-publish the version to docker hub, and start minikube service and store services.
