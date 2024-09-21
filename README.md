@@ -5,7 +5,7 @@
 - Docker Hub account
 - k3d installed or alternatively Minikube 
 - kubectl installed
-
+- VS Code
 ## Steps
 
 ### 1. Clone the Repository
@@ -230,3 +230,132 @@ kubectl exec --stdin --tty storefrontend-78fc97b957-lmsls -- /bin/bash
 kubectl logs storefrontend-78fc97b957-lmsls
 ```
 ### Reconfigure Kubernetes deployment to implement an infrastructure-based resiliency
+
+#### Install linkerd on windows
+
+Get latest linkerd version from release page on GitHub
+```bash
+```
+
+Add linkerd to path (WSL)
+```bash
+$env:PATH += ";C:\Program Files\linkerd2-main"
+```
+
+### Comment the c# code which was added previously to implement resiliency
+```csharp
+.AddStandardResilienceHandler(options =>
+{
+    //default timeout was 30s, but we changed it to 260s
+    options.Retry.MaxRetryAttempts = 7;
+    options.TotalRequestTimeout = new HttpTimeoutStrategyOptions
+    {
+        Timeout = TimeSpan.FromMinutes(5)
+    };
+})
+```
+
+Check whether linkerd is properly installed:
+```bash
+linkerd check --pre
+```
+
+Generates a Kubernetes manifest with the necessary control plane resources:
+```bash
+linkerd install --crds | kubectl apply -f -
+```
+
+The generated manifest is piped to kubectl apply, which installs those control plane resources in the Kubernetes cluster:
+```bash
+linkerd install --set proxyInit.runAsRoot=true | kubectl apply -f -
+```
+
+Add the linkerd.io/inject: enabled annotation to the backend-deploy.yml file under template metadata.
+```bash
+template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels: 
+```
+
+publish the updated image do to docker hub
+```bash
+docker push josefernandoferreiragomes/productservice
+```
+
+update kubernetes
+```bash
+kubectl apply -f backend-deploy.yml,frontend-deploy.yml
+```
+
+
+In powershell, The linkerd manifest is configured as:
+
+Any idempotent HTTP GET route matching the pattern /api/Product can be retried.
+Retries can add no more than an extra 20 percent to the request load, plus another 10 "free" retries per second.
+Run the following command to use the service profile in the Kubernetes cluster:
+
+```bash
+$yaml = @"
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: backend
+  namespace: default
+spec:
+  routes:
+  - condition:
+      method: GET
+      pathRegex: /api/Product
+    name: GET /v1/products 
+    isRetryable: true
+  retryBudget:
+    retryRatio: 0.2
+    minRetriesPerSecond: 10
+    ttl: 120s  
+"@
+
+```
+
+then, run:
+```bash
+$yaml | kubectl apply -f -
+```
+
+Linkerd has extensions to give you extra features. Install the viz extension and view the status of the app in Linkerd's dashboard.
+In the terminal, run this command to install the extension:
+```bash
+linkerd viz install | kubectl apply -f -
+```
+
+View the dashboard with this command:
+```bash
+linkerd viz dashboard
+```
+IT will open the website
+http://localhost:50750/namespaces
+
+Check the pods
+
+To test the resilience provided by linkerd:
+Scale productsbackend to 0 replicas
+
+Restart the product service pods ( 1 replica)
+
+the app sould now display the products
+
+#### If linkerd does not install in WSL, it might be needed to install a linux distribution, like ubuntu, from microsoft store and configure a user
+
+To navigate to windows user folders, type 
+  cd /mnt/c/Users/<your-username>
+
+Installing linkerd in linux:
+```bash
+curl.exe -sL https://run.linkerd.io/install
+```
+
+add linkerd to path (linux)
+```bash
+$env:PATH += ";$HOME\.linkerd2\bin"
+```

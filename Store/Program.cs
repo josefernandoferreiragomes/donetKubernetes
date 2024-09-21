@@ -12,15 +12,16 @@ builder.Services.AddHttpClient<ProductService>(c =>
     var url = builder.Configuration["ProductEndpoint"] ?? throw new InvalidOperationException("ProductEndpoint is not set");
 
     c.BaseAddress = new(url);
-}).AddStandardResilienceHandler(options =>
-{
-    //default timeout was 30s, but we changed it to 260s
-    options.Retry.MaxRetryAttempts = 7;
-    options.TotalRequestTimeout = new HttpTimeoutStrategyOptions
-    {
-        Timeout = TimeSpan.FromMinutes(5)
-    };
-});
+});    
+// }).AddStandardResilienceHandler(options =>
+// {
+//     //default timeout was 30s, but we changed it to 260s
+//     options.Retry.MaxRetryAttempts = 7;
+//     options.TotalRequestTimeout = new HttpTimeoutStrategyOptions
+//     {
+//         Timeout = TimeSpan.FromMinutes(5)
+//     };
+// });
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
