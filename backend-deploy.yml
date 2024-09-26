@@ -7,8 +7,8 @@ spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        linkerd.io/inject: enabled
+      #annotations:
+      #  linkerd.io/inject: enabled
       labels:
         app: productsbackend
     spec:

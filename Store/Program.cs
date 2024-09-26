@@ -1,6 +1,6 @@
 using Store.Components;
 using Store.Services;
-using Microsoft.Extensions.Http.Resilience;
+//using Microsoft.Extensions.Http.Resilience;
 
 var builder = WebApplication.CreateBuilder(args);
 

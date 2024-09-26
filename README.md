@@ -234,8 +234,8 @@ kubectl logs storefrontend-78fc97b957-lmsls
 #### Install linkerd on windows
 
 Get latest linkerd version from release page on GitHub
-```bash
-```
+https://github.com/linkerd/linkerd2/releases/
+
 
 Add linkerd to path (WSL)
 ```bash
@@ -244,6 +244,8 @@ $env:PATH += ";C:\Program Files\linkerd2-main"
 
 ### Comment the c# code which was added previously to implement resiliency
 ```csharp
+//using Microsoft.Extensions.Http.Resilience;
+//(...)
 .AddStandardResilienceHandler(options =>
 {
     //default timeout was 30s, but we changed it to 260s
@@ -255,6 +257,10 @@ $env:PATH += ";C:\Program Files\linkerd2-main"
 })
 ```
 
+### Remove the reference to resiliency package
+```bash
+dotnet remove package Microsoft.Extensions.Http.Resilience
+```
 Check whether linkerd is properly installed:
 ```bash
 linkerd check --pre
@@ -281,7 +287,7 @@ template:
 
 publish the updated image do to docker hub
 ```bash
-docker push josefernandoferreiragomes/productservice
+docker push josefernandoferreiragomes/storeimage
 ```
 
 update kubernetes
@@ -345,6 +351,29 @@ Restart the product service pods ( 1 replica)
 
 the app sould now display the products
 
+### Uninstall linkerd
+
+Remove Data Plane Proxies
+```bash
+kubectl get deploy -o yaml | linkerd uninject - | kubectl apply -f -
+```
+
+Remove extensions
+```bash
+linkerd viz uninstall | kubectl delete -f -
+```
+
+Remove Control Plane
+```bash
+linkerd uninstall | kubectl delete -f -
+```
+
+comment the yml configuration from both backend-deploy.yml and frontend-deploy.yml
+```yml
+metadata:
+      #annotations:
+      #  linkerd.io/inject: enabled
+```
 #### If linkerd does not install in WSL, it might be needed to install a linux distribution, like ubuntu, from microsoft store and configure a user
 
 To navigate to windows user folders, type 

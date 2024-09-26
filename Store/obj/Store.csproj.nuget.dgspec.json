@@ -118,12 +118,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "dependencies": {
-            "Microsoft.Extensions.Http.Resilience": {
-              "target": "Package",
-              "version": "[8.9.1, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
