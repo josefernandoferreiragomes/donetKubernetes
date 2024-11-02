@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Pzvyfidjgck=",
+  "dgSpecHash": "/aDWE5Eky1M=",
   "success": true,
-  "projectFilePath": "C:\\Users\\josef\\source\\repos\\mslearn-dotnet-cloudnative-main\\mslearn-dotnet-cloudnative-main\\dotnet-kubernetes\\Store\\Store.csproj",
+  "projectFilePath": "C:\\Users\\josef\\source\\repos\\dotnetKubernetes\\Store\\Store.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

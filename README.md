@@ -8,6 +8,19 @@
 - VS Code
 ## Steps
 
+### to run the app, from the existing repo, after all software is installed, and the docker images are published to docker hub
+```bash
+k3d cluster create devcluster --config k3d.yml
+```
+```bash
+kubectl apply -f backend-deploy.yml
+```
+http://localhost:32001/api/product
+```bash
+kubectl apply -f frontend-deploy.yml
+```
+http://localhost:32000/
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/MicrosoftDocs/mslearn-dotnet-cloudnative.git
@@ -69,7 +82,7 @@ enable WSL2
 wsl --set-default-version 2
 ```
 
-install k3d, using chocolatery and then verify installation
+install k3d, using chocolatey and then verify installation
 ```bash
 choco install k3d -y
 
@@ -79,6 +92,11 @@ k3d --version
 ### create k3d cluster
 ```bash
 k3d cluster create devcluster --config k3d.yml
+```
+
+### In case you need to delete and create again, delete k3d cluster
+```bash
+k3d cluster delete devcluster
 ```
 
 #### Alternatively, use minikube to orchestrate the containers
@@ -125,7 +143,7 @@ check status (minikube only)
 minikube status
 ```
 
-### 11. Test the api in k3d, in the browser, concatenating localhost with the 
+### 11. Test the api in k3d, in the browser, concatenating localhost with the url
 http://localhost:32001/api/product
 
 #### alternatively, open tunnel and test the api (minikube only)

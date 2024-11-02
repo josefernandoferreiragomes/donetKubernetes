@@ -7,9 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataEntities", "DataEntitie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products", "Products\Products.csproj", "{3366FB0E-CCF3-4620-924E-F2DA34BC00F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store", "Store\Store.csproj", "{2E156904-6754-43F5-8B27-9B9D6479D9FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store", "Store\Store.csproj", "{2E156904-6754-43F5-8B27-9B9D6479D9FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diagnostics", "Diagnostics\Diagnostics.csproj", "{5D5252B4-9735-4359-BB66-F96462A2ACBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diagnostics", "Diagnostics\Diagnostics.csproj", "{5D5252B4-9735-4359-BB66-F96462A2ACBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F764A3E0-6786-4072-A028-4460FB63573A}"
+	ProjectSection(SolutionItems) = preProject
+		backend-deploy.yml = backend-deploy.yml
+		docker-compose.yml = docker-compose.yml
+		frontend-deploy.yml = frontend-deploy.yml
+		k3d.yml = k3d.yml
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+		ReadMeObservability.md = ReadMeObservability.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
