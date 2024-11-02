@@ -34,7 +34,7 @@ http://localhost:32000/
 git clone https://github.com/MicrosoftDocs/mslearn-dotnet-cloudnative.git
 cd mslearn-dotnet-cloudnative
 ```
-### 2. Run the following command to build the containers
+### 2. Run the following command to build the containers (instead of using a dockerfile), just for testing purposes
 ```bash
 dotnet publish /p:PublishProfile=DefaultContainer
 ```
