@@ -1,4 +1,6 @@
-# Running `mslearn-dotnet-cloudnative` Project
+## Running `mslearn-dotnet-cloudnative` Project locally
+### ASP.NET Web Api
+### Blazor web site
 
 ## Prerequisites
 - Docker installed
@@ -6,6 +8,10 @@
 - k3d installed or alternatively Minikube 
 - kubectl installed
 - VS Code
+
+### experimental
+Azure pipeline files
+ 
 ## Steps
 
 ### to run the app, from the existing repo, after all software is installed, and the docker images are published to docker hub
@@ -20,6 +26,8 @@ http://localhost:32001/api/product
 kubectl apply -f frontend-deploy.yml
 ```
 http://localhost:32000/
+
+### To run the app, starting with local software installation
 
 ### 1. Clone the Repository
 ```bash
