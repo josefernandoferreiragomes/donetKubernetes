@@ -1,8 +1,8 @@
-###Trigger on changes to the main branch.
-###Use an Ubuntu agent pool.
-###Install Docker.
-###Build and push your Docker image to your registry.
-###Deploy the application to your local K3d cluster using kubectl.
+### Trigger on changes to the main branch.
+### Use an Ubuntu agent pool.
+### Install Docker.
+### Build and push your Docker image to your registry.
+### Deploy the application to your local K3d cluster using kubectl.
 ###
 trigger:
 - main
@@ -21,8 +21,8 @@ steps:
   displayName: 'Build and Push Docker Image'
 
 - script: |
-    kubectl apply -f deployment.yaml
-    kubectl apply -f service.yaml
+    ### Deployment and service in the same yml    
+    kubectl apply -f backend-deploy.yml
   displayName: 'Deploy to K3d'
   env:
     KUBECONFIG: /home/vsts/.kube/config
