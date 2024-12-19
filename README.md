@@ -21,10 +21,15 @@ k3d cluster create devcluster --config k3d.yml
 ```bash
 kubectl apply -f backend-deploy.yml
 ```
+
+test backend
 http://localhost:32001/api/product
+
 ```bash
 kubectl apply -f frontend-deploy.yml
 ```
+
+test frontend
 http://localhost:32000/
 
 ### To run the app, starting with local software installation
@@ -80,7 +85,19 @@ git remote show origin
 ### 9. Configure and start kubernetes
 ### In windows machine
 
-install kubectl
+Install chocolatey, in powershell
+Paste, and enter:
+```bash
+Set-ExecutionPolicy Bypass -Scope Process -Force
+```
+then paste:
+```bash
+$installer = "https://community.chocolatey.org/install.ps1"
+iex ((New-Object System.Net.WebClient).DownloadString($installer))
+```
+then, enter
+
+Install kubectl
 ```bash
 choco install kubernetes-cli -y
 ```
@@ -93,7 +110,10 @@ wsl --set-default-version 2
 install k3d, using chocolatey and then verify installation
 ```bash
 choco install k3d -y
+```
 
+verify k3d version
+```bash
 k3d --version
 ```
 
