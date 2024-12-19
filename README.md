@@ -86,6 +86,7 @@ git remote show origin
 ### In windows machine
 
 Install chocolatey, in powershell
+https://docs.chocolatey.org/en-us/choco/setup/?form=MG0AV3
 Paste, and enter:
 ```bash
 Set-ExecutionPolicy Bypass -Scope Process -Force
