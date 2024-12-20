@@ -399,3 +399,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .vscode/settings.json
+
+# Ignore bin and obj directories
+**/bin/
+**/obj/
