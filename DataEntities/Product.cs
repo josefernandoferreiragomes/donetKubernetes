@@ -18,6 +18,9 @@ public class Product
 
     [JsonPropertyName("imageUrl")]
     public string? ImageUrl { get; set; }
+
+    [JsonPropertyName("stock")]
+    public int Stock { get; set; }
 }
 
 

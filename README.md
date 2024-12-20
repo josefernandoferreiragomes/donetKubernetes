@@ -21,6 +21,10 @@ k3d cluster create devcluster --config k3d.yml
 ```bash
 kubectl apply -f backend-deploy.yml
 ```
+or if already created
+```bash
+k3d cluster start devcluster
+```
 
 test backend
 http://localhost:32001/api/product
@@ -31,6 +35,12 @@ kubectl apply -f frontend-deploy.yml
 
 test frontend
 http://localhost:32000/
+
+Re deploy the containers
+https://medium.com/@haroldfinch01/how-do-i-force-kubernetes-to-re-pull-an-image-cf2b8c4854bc
+```bash
+kubectl rollout restart deployment <deployment-name>
+```
 
 ### To run the app, starting with local software installation
 
@@ -221,6 +231,102 @@ kubectl scale --replicas=1 deployment/productsbackend
 
 ## References
 https://learn.microsoft.com/en-us/training/modules/dotnet-deploy-microservices-kubernetes/4-exercise-deploy-to-kubernetes
+
+### Add OpenTelemetry
+https://learn.microsoft.com/en-us/training/modules/implement-observability-cloud-native-app-with-opentelemetry/4-exercise-add-observability-cloud-native-app
+
+```bash
+cd Diagnostics
+
+dotnet add package OpenTelemetry.Exporter.Console
+dotnet add package OpenTelemetry.Extensions.Hosting
+dotnet add package OpenTelemetry.Instrumentation.AspNetCore
+dotnet add package OpenTelemetry.Instrumentation.EventCounters --prerelease
+dotnet add package OpenTelemetry.Instrumentation.Runtime
+dotnet add package OpenTelemetry.Instrumentation.SqlClient --prerelease
+dotnet add package OpenTelemetry.Instrumentation.Http
+```
+
+### Update images
+Tutorial
+    https://docs.docker.com/get-started/docker-concepts/building-images/build-tag-and-publish-an-image/
+
+Created dockerfiles and updated its directories
+
+Commands to build
+    ```bash    
+    docker build -t josefernandoferreiragomes/productservice -f ./products/Dockerfile .
+    docker build -t josefernandoferreiragomes/storeimage -f ./store/Dockerfile .
+    ```
+
+Commands to tag
+```bash
+docker tag josefernandoferreiragomes/productservice:latest josefernandoferreiragomes/productservice:latest
+docker tag josefernandoferreiragomes/storeimage:latest josefernandoferreiragomes/storeimage:latest
+```
+
+Commands to push
+```bash
+docker push josefernandoferreiragomes/productservice:latest
+docker push josefernandoferreiragomes/storeimage:latest
+```
+
+local pods update
+```bash
+kubectl set image deployment/productsbackend productsbackend=josefernandoferreiragomes/productservice:latest
+kubectl set image deployment/storefrontend storefrontend=josefernandoferreiragomes/storeimage:latest
+```
+
+verify the deployment was updated
+```bash
+kubectl get deployment productsbackend -o yaml
+kubectl get deployment storefrontend -o yaml
+```
+
+you should see in the output the image field under the containers section to confirm it has the new image tag josefernandoferreiragomes/storeimage:latest
+
+to delete the old pods
+```bash
+kubectl delete pods -l app=productsbackend
+kubectl delete pods -l app=storefrontend
+```
+
+
+### Open app
+
+    http://localhost:32000
+
+### verify the telemetry logs
+```bash
+kubectl get pods
+kubectl logs <pod-name>
+kubectl logs <pod-name> -c <container-name>
+```
+
+Output to file
+```bash
+kubectl logs productsbackend-659d569fb8-m76h4 > productsbackendlogsexample.txt
+```
+
+Should see a log like 
+```
+Instrumentation scope (Meter):
+	Name: Microsoft.AspNetCore.Hosting
+Resource associated with Metric:
+	service.name: Products
+	service.version: 1.0
+	service.instance.id: 46bfe2a8-fb40-48ba-843c-84783d23831d
+	telemetry.sdk.name: opentelemetry
+	telemetry.sdk.language: dotnet
+	telemetry.sdk.version: 1.10.0
+(2024-12-20T11:25:41.3443499Z, 2024-12-20T11:29:31.3114117Z] http.request.method: PUT http.response.status_code: 200 http.route: /api/Stock/{id} network.protocol.version: 1.1 url.scheme: http Histogram
+streaming logs
+```
+
+```bash
+kubectl logs -f <pod-name>
+```
+
 
 # Resiliency approaches
 

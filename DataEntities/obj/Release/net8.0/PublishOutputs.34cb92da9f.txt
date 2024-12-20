@@ -1,3 +1,0 @@
-C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\DataEntities\bin\Release\net8.0\publish\DataEntities.dll
-C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\DataEntities\bin\Release\net8.0\publish\DataEntities.deps.json
-C:\Users\josef\source\repos\mslearn-dotnet-cloudnative-main\mslearn-dotnet-cloudnative-main\dotnet-kubernetes\DataEntities\bin\Release\net8.0\publish\DataEntities.pdb
