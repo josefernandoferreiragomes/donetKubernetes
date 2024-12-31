@@ -300,7 +300,8 @@ kubectl delete pods -l app=storefrontend
 ```bash
 kubectl get pods
 kubectl logs <pod-name>
-kubectl logs <pod-name> -c <container-name>
+
+kubectl logs storefrontend-9cbdb4547-sn6wk -c storefrontend
 ```
 
 Output to file
@@ -325,6 +326,37 @@ streaming logs
 
 ```bash
 kubectl logs -f <pod-name>
+```
+
+### Rolling update
+Make a change to the site
+then update the frontend-deploy.yml
+```bash
+spec:
+  replicas: 3
+  strategy: 
+    type: RollingUpdate 
+    rollingUpdate: 
+      maxUnavailable: 1 
+      maxSurge: 1
+```
+
+Apply deployment
+```bash
+kubectl apply -f frontend-deploy.yml
+```
+
+Ùpdate the image
+```bash
+kubectl set image deployment/storefrontend storefrontend=josefernandoferreiragomes/storeimage:latest
+
+```
+
+Monitor the update
+```bash
+kubectl rollout status deployment/storefrontend
+
+kubectl get pods
 ```
 
 

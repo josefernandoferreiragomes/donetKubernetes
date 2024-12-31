@@ -32,6 +32,7 @@ else
     @foreach (var product in products)
       {
         <tr>
+          <!-- Simulating images being hosted on a CDN -->
           <td><img height="80" width="80" src="https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/@product.ImageUrl" /></td>
           <td>@product.Name</td>
           <td>@product.Description</td>
@@ -47,25 +48,27 @@ else
 }
 
 @if(visible){
-  <ModalDialog Title="Stock Updates" Text="Enter the amount below:" OnClose="@OnDialogClose" />
+  <ModalDialog Title="@($"{selectedProduct.Name} Stock Updates")" Text="Enter the amount below:" QuantityEntered="@selectedProduct.Stock" OnClose="@OnDialogClose" />
 }
 
 @code {
-  private bool visible = false;
-  private int selectedProductID;
-  private List<Product>? products;
+    private bool visible = false;
+    private Product selectedProduct;
+    private List<Product>? products;
 
-  private async Task OpenDialog(Product selectedProduct)
-  {
-    selectedProductID = selectedProduct.Id;
-    visible=true;
-    StateHasChanged();
-  }
+    private Task OpenDialog(Product product)
+    {
+        selectedProduct = product;
+        visible=true;
+        StateHasChanged();
+
+        return Task.CompletedTask;
+    }
 
   private async Task OnDialogClose(ModalDialogResponse response)
   {
     if (response.Confirm) {
-      await ProductService.UpdateStock(selectedProductID, response.Quantity);
+      await ProductService.UpdateStock(selectedProduct.Id, response.Quantity);
       products = await ProductService.GetProducts();
     }
     visible=false;
