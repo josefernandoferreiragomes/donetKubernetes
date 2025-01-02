@@ -383,7 +383,7 @@ Add the OpenTelemetry.Exporter.Prometheus.AspNetCore package:
 dotnet add package OpenTelemetry.Exporter.Prometheus.AspNetCore --prerelease
 ```
 
-Add Prometheus exporter on Diagnostics
+#### Add Prometheus exporter on Diagnostics
 
 ```csharp
 .AddPrometheusExporter();
@@ -400,6 +400,8 @@ docker compose up
 Open Prometheus (9090). If you're running locally in Visual Studio Code, open a browser and, on a new tab, go to the Prometheus app
 http://localhost:9090
 
+#### Add Grafana
+
 Open in Browser for Grafana (3000). If you're running locally in Visual Studio Code, open a browser and, on a new tab, go to the Grafana app
 http://localhost:3000.
 
@@ -410,6 +412,41 @@ https://github.com/dotnet/aspire/blob/main/src/Grafana/dashboards/aspnetcore.jso
 
 In the Prometheus data source dropdown, select Prometheus.
 
+#### Extend the tracing capabilities of the app by adding Zipkin
+
+Add a Zipkin container to your app and configure it to connect to the OpenTelemetry collector. 
+Then you add the OpenTelemetry Zipkin exporter to your app.
+
+Add zipkin dependency to site and api
+
+Add zipkin package to Diagnostics project
+```bash
+dotnet add package OpenTelemetry.Exporter.Zipkin --prerelease
+```
+
+Add tracing providers to DiagnosticServiceCollectionExtensions.cs
+```csharp
+// add the tracing providers
+.WithTracing(tracing =>
+{
+  tracing.SetResourceBuilder(resource)
+              .AddAspNetCoreInstrumentation()
+              .AddHttpClientInstrumentation()
+              .AddSqlClientInstrumentation()
+              .AddZipkinExporter(zipkin =>
+              {
+                var zipkinUrl = configuration["ZIPKIN_URL"] ?? "http://zipkin:9411";
+                zipkin.Endpoint = new Uri($"{zipkinUrl}/api/v2/spans");
+              });
+});
+```
+
+Build and run the app
+
+Open Zipkin (make some requests from store web site)
+http://localhost:9411
+
+Explore dependencies and traces (it takes a few minutes to show up)
 
 ### Troubleshoot api connectivity from within
 ```bash

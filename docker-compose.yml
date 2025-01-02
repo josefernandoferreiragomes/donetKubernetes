@@ -8,15 +8,18 @@ services:
     build:
       context: .  # Path to the website project folder
       dockerfile: /Store/Dockerfile  # Dockerfile for the website
-    environment: 
-      - ProductEndpoint=http://backend:8080
     ports:
       - "32030:8080"
       - "32031:8081"
     depends_on: 
       - backend
+      - prometheus
+      - zipkin
     networks:
       - mynetwork
+    environment: 
+      - ProductEndpoint=http://backend:8080
+      - ZIPKIN_URL=http://zipkin:9411
 
   backend:
     #image: josefernandoferreiragomes/productservice:latest
@@ -29,6 +32,11 @@ services:
       - "32021:8081"
     networks:
       - mynetwork
+    depends_on: 
+      - prometheus
+      - zipkin
+    environment: 
+      - ZIPKIN_URL=http://zipkin:9411    
 
   prometheus:
     image: prom/prometheus
@@ -42,6 +50,8 @@ services:
       - ./prometheus:/etc/prometheus
     networks:
       - mynetwork
+    environment: 
+      - ZIPKIN_URL=http://zipkin:9411    
 
   grafana:
     image: grafana/grafana
@@ -54,6 +64,13 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=grafana
     volumes:
       - ./grafana/datasource:/etc/grafana/provisioning/datasources 
+    networks:
+      - mynetwork
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
     networks:
       - mynetwork
 
