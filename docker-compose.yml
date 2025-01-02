@@ -1,16 +1,63 @@
-version: '3.4'
+---
 
 services: 
 
   frontend:
-    image: josefernandoferreiragomes/storeimage:latest
+    #image: josefernandoferreiragomes/storeimage:latest
+    container_name: frontendcontainer
+    build:
+      context: .  # Path to the website project folder
+      dockerfile: /Store/Dockerfile  # Dockerfile for the website
     environment: 
       - ProductEndpoint=http://backend:8080
     ports:
-      - "32000:8080"
+      - "32030:8080"
+      - "32031:8081"
     depends_on: 
       - backend
+    networks:
+      - mynetwork
+
   backend:
-    image: josefernandoferreiragomes/productservice:latest
+    #image: josefernandoferreiragomes/productservice:latest
+    container_name: backendcontainer
+    build:
+      context: .  # Path to the web API project folder
+      dockerfile: "./Products/Dockerfile"  # Dockerfile for the web API
     ports: 
-      - "32001:8080"
+      - "32020:8080"
+      - "32021:8081"
+    networks:
+      - mynetwork
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+    networks:
+      - mynetwork
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./grafana/datasource:/etc/grafana/provisioning/datasources 
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+    name: mynetworkname

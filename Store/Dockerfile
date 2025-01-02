@@ -14,6 +14,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Store/Store.csproj", "Store/"]
 COPY ["../DataEntities/DataEntities.csproj", "DataEntities/"]
+COPY ["../Diagnostics/Diagnostics.csproj", "Diagnostics/"]
 RUN dotnet restore "./Store/Store.csproj"
 COPY . .
 WORKDIR "/src/Store"

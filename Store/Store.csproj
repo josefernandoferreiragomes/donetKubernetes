@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataEntities\DataEntities.csproj" />
+    <ProjectReference Include="..\Diagnostics\Diagnostics.csproj" />
   </ItemGroup>
 
 </Project>

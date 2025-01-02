@@ -52,6 +52,8 @@ cd mslearn-dotnet-cloudnative
 ### 2. Run the following command to build the containers (instead of using a dockerfile), just for testing purposes
 ```bash
 dotnet publish /p:PublishProfile=DefaultContainer
+or
+docker-compose build
 ```
 
 ### 3. Run the following command to run the app and attach the containers
@@ -235,6 +237,10 @@ https://learn.microsoft.com/en-us/training/modules/dotnet-deploy-microservices-k
 ### Add OpenTelemetry
 https://learn.microsoft.com/en-us/training/modules/implement-observability-cloud-native-app-with-opentelemetry/4-exercise-add-observability-cloud-native-app
 
+Add a Diagnostics project to the solution
+
+Add OpenTelemetry packages
+
 ```bash
 cd Diagnostics
 
@@ -245,6 +251,15 @@ dotnet add package OpenTelemetry.Instrumentation.EventCounters --prerelease
 dotnet add package OpenTelemetry.Instrumentation.Runtime
 dotnet add package OpenTelemetry.Instrumentation.SqlClient --prerelease
 dotnet add package OpenTelemetry.Instrumentation.Http
+```
+
+Add the code to use OpenTelemetry
+
+Add Diagnostics project reference in Products
+
+In program.cs add the following code
+```csharp
+builder.Services.AddObservability("Products", builder.Configuration);
 ```
 
 ### Update images
@@ -291,7 +306,6 @@ kubectl delete pods -l app=productsbackend
 kubectl delete pods -l app=storefrontend
 ```
 
-
 ### Open app
 
     http://localhost:32000
@@ -311,17 +325,8 @@ kubectl logs productsbackend-659d569fb8-m76h4 > productsbackendlogsexample.txt
 
 Should see a log like 
 ```
-Instrumentation scope (Meter):
-	Name: Microsoft.AspNetCore.Hosting
-Resource associated with Metric:
-	service.name: Products
-	service.version: 1.0
-	service.instance.id: 46bfe2a8-fb40-48ba-843c-84783d23831d
-	telemetry.sdk.name: opentelemetry
-	telemetry.sdk.language: dotnet
-	telemetry.sdk.version: 1.10.0
-(2024-12-20T11:25:41.3443499Z, 2024-12-20T11:29:31.3114117Z] http.request.method: PUT http.response.status_code: 200 http.route: /api/Stock/{id} network.protocol.version: 1.1 url.scheme: http Histogram
-streaming logs
+(2025-01-02T16:37:04.9174192Z, 2025-01-02T17:04:20.9855429Z] http.request.method: PUT http.response.status_code: 200 http.route: /api/Stock/{id} network.protocol.version: 1.1 url.scheme: http Histogram
+Value: Sum: 0.0926551 Count: 1 Min: 0.0926551 Max: 0.0926551 
 ```
 
 ```bash
@@ -359,6 +364,61 @@ kubectl rollout status deployment/storefrontend
 kubectl get pods
 ```
 
+### View telemetry data in 3rd party tools
+
+https://learn.microsoft.com/en-us/training/modules/implement-observability-cloud-native-app-with-opentelemetry/5-view-telemetry-data
+
+Use OpenTelemetry data in a cloud-native application
+
+Adds two new services, Prometheus and Grafana. The Prometheus section configures a container to respond on port 9090. It maps the prometheus folder expecting a prometheus.yml file. The Grafana section configures a container to respond on port 3000. It maps three folders inside a grafana folder.
+
+Configure Grafana
+
+Update ASP.NET Core app to expose metrics for Prometheus
+
+Optionally remove previous OpenTelemetry package, but may be maintained for demonstration and comparisson purposes
+
+Add the OpenTelemetry.Exporter.Prometheus.AspNetCore package:
+```bash
+dotnet add package OpenTelemetry.Exporter.Prometheus.AspNetCore --prerelease
+```
+
+Add Prometheus exporter on Diagnostics
+
+```csharp
+.AddPrometheusExporter();
+```
+
+Test the new observability features
+
+```bash
+dotnet publish /p:PublishProfile=DefaultContainer
+docker compose build
+docker compose up
+```
+
+Open Prometheus (9090). If you're running locally in Visual Studio Code, open a browser and, on a new tab, go to the Prometheus app
+http://localhost:9090
+
+Open in Browser for Grafana (3000). If you're running locally in Visual Studio Code, open a browser and, on a new tab, go to the Grafana app
+http://localhost:3000.
+
+credentials: u: admin, p: grafana
+
+Import dashboard
+https://github.com/dotnet/aspire/blob/main/src/Grafana/dashboards/aspnetcore.json
+
+In the Prometheus data source dropdown, select Prometheus.
+
+
+### Troubleshoot api connectivity from within
+```bash
+docker exec -u root e0f14f07f267 apt update
+docker exec -u root e0f14f07f267 apt install -y curl
+docker exec -u root e0f14f07f267 apt install -y net-tools
+docker exec -u root e0f14f07f267 netstat -tuln
+docker exec -u root e0f14f07f267 curl -v http://localhost:8080/metrics
+```
 
 # Resiliency approaches
 

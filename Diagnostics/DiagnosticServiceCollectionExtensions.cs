@@ -34,7 +34,8 @@ public static class DiagnosticServiceCollectionExtensions
                         "System.Net.Sockets");
                 })
               .AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel")
-              .AddConsoleExporter();
+              //.AddConsoleExporter();
+              .AddPrometheusExporter();
 
             })
             // add the tracing providers
@@ -47,5 +48,11 @@ public static class DiagnosticServiceCollectionExtensions
             });
 
         return services;
+    }
+
+    // Add the Prometheus scraping endpoint
+    public static void MapObservability(this IEndpointRouteBuilder routes)
+    {
+        routes.MapPrometheusScrapingEndpoint();
     }
 }

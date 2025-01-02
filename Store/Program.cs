@@ -27,6 +27,9 @@ builder.Services.AddHttpClient<ProductService>(c =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add observability code here
+builder.Services.AddObservability("Store", builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,5 +47,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapObservability();
 
 app.Run();
