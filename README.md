@@ -477,6 +477,48 @@ View the new metric in Prometheus:
 
     In the search box, enter theeshoplite_products_stock_change_total metric and then select Execute.
     You should see it listed in a table.
+    Select the Graph tab. You should see the stock amount change over time.
+
+Docker build with no cache
+```bash
+docker compose build --no-cache
+```
+
+In case you need to debug, add the following to the docker-compose.yml
+```yml
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+```
+
+Or, change Release with Debug in the Dockerfile
+
+And then attatch the debugger -> Local -> container -> frontend
+
+### Add compliance
+
+https://learn.microsoft.com/en-us/training/modules/dotnet-compliance-cloud-native-applications/3-exercise-classify-sensitive-data-cloud-native-application
+
+Add code to create two new taxonomies. Then annotate the Product and Order data types with the appropriate attributes.
+
+In Data Entities project, add package
+```bash
+dotnet add package Microsoft.Extensions.Compliance.Redaction
+```
+
+Add new Compliance class
+
+The new Code creates two taxonomies, EUII and EUPI. It also creates two attributes, EUIIDataAttribute and EUPDataAttribute. These attributes are used to annotate the data types.
+
+Use these taxonomies and attributes to classify the data types in the eShopLite app.
+
+https://learn.microsoft.com/en-us/training/modules/dotnet-compliance-cloud-native-applications/4-redact-sensitive-data-cloud-native-application
+
+The .NET logging framework provides a simple way to redact data in log messages. The Microsoft.Extensions.Compliance.Abstractions package enhances logging to include a Redactor class that redacts data
+
 
 # Resiliency approaches
 

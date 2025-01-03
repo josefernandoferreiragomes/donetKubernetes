@@ -43,26 +43,73 @@ public class ProductService
     return products ?? new List<Product>();
   }
 
-public async Task<bool> UpdateStock(int productId, int stockAmount)
-{
-    try
+    public async Task<bool> UpdateStock(int productId, int stockAmount)
     {
-        var response = await httpClient.PutAsync($"/api/Stock/{productId}?stockAmount={stockAmount}", null);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return true;
+            var response = await httpClient.PutAsync($"/api/Stock/{productId}?stockAmount={stockAmount}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            // handle error  
+            return false;
+        }
+    }
+
+    public async Task<Product> GetProduct(int productId)
+    {
+        Product? product = null;
+        try
+        {
+            var response = await httpClient.GetAsync($"/api/Product/{productId}");
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                product = await response.Content.ReadFromJsonAsync<Product>(options);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during GetProduct.");
         }
 
-        return false;
+        return product ?? new Product();
     }
-    catch (Exception ex)
+
+    public async Task<bool> CreateOrder(Order order)
     {
-        // handle error  
-        return false;
+        try
+        {
+            var response = await httpClient.PostAsync("/api/Order", new StringContent(JsonSerializer.Serialize(order), Encoding.UTF8, "application/json"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            // handle error  
+            return false;
+        }
     }
-}
 
 
 }
