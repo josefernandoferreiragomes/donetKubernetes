@@ -457,6 +457,27 @@ docker exec -u root e0f14f07f267 netstat -tuln
 docker exec -u root e0f14f07f267 curl -v http://localhost:8080/metrics
 ```
 
+### Extend telemetry
+
+https://learn.microsoft.com/en-us/training/modules/implement-observability-cloud-native-app-with-opentelemetry/7-exercise-extend-telemetry
+
+Create a custom metric: 
+
+Creates a new metric called eshoplite.products.stock_change. This metric tracks the amount of stock being changed through the product service
+
+Add the metric to OpenTelemetry:
+
+Add the metric to OpenTelemetry so that it can be exported to your observability tools
+
+View the new metric in Prometheus:
+
+    Open the eShopLite app in a browser at http://localhost:32000
+    Go to the Products page and change the stock amount on several products
+    Open Prometheus in a browser at http://localhost:9090
+
+    In the search box, enter theeshoplite_products_stock_change_total metric and then select Execute.
+    You should see it listed in a table.
+
 # Resiliency approaches
 
 #### Retry
