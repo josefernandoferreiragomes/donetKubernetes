@@ -6,42 +6,42 @@ namespace Store.Services;
 
 public class ProductService
 {
-  HttpClient httpClient;
-  private readonly ILogger<ProductService> _logger;
+    HttpClient httpClient;
+    private readonly ILogger<ProductService> _logger;
 
-  public ProductService(HttpClient httpClient, ILogger<ProductService> logger)
-  {
-    _logger = logger;
-    this.httpClient = httpClient;
-  }
-  public async Task<List<Product>> GetProducts()
-  {
-    List<Product>? products = null;
-    try
+    public ProductService(HttpClient httpClient, ILogger<ProductService> logger)
     {
-      var response = await httpClient.GetAsync("/api/Product");
-      var responseText = await response.Content.ReadAsStringAsync();
-
-      _logger.LogInformation($"Http status code: {response.StatusCode}");
-      _logger.LogInformation($"Http response content: {responseText}");
-
-      if (response.IsSuccessStatusCode)
-      {
-        var options = new JsonSerializerOptions
+        _logger = logger;
+        this.httpClient = httpClient;
+    }
+    public async Task<List<Product>> GetProducts()
+    {
+        List<Product>? products = null;
+        try
         {
-          PropertyNameCaseInsensitive = true
-        };
+            var response = await httpClient.GetAsync("/api/Product");
+            var responseText = await response.Content.ReadAsStringAsync();
 
-        products = await response.Content.ReadFromJsonAsync(ProductSerializerContext.Default.ListProduct);
-      }
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Error during GetProducts.");
-    }
+            _logger.LogInformation($"Http status code: {response.StatusCode}");
+            _logger.LogInformation($"Http response content: {responseText}");
 
-    return products ?? new List<Product>();
-  }
+            if (response.IsSuccessStatusCode)
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                products = await response.Content.ReadFromJsonAsync(ProductSerializerContext.Default.ListProduct);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during GetProducts.");
+        }
+
+        return products ?? new List<Product>();
+    }
 
     public async Task<bool> UpdateStock(int productId, int stockAmount)
     {
@@ -94,6 +94,8 @@ public class ProductService
     {
         try
         {
+            _logger.LogOrders(order);
+
             var response = await httpClient.PostAsync("/api/Order", new StringContent(JsonSerializer.Serialize(order), Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
@@ -111,5 +113,12 @@ public class ProductService
         }
     }
 
-
 }
+
+#region Logging Extensions
+public static partial class Log
+{
+    [LoggerMessage(1, LogLevel.Information, "Placed Order: {order}")]
+    public static partial void LogOrders(this ILogger logger, [LogProperties] Order order);
+}
+#endregion

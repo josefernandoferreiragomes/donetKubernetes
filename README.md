@@ -517,8 +517,45 @@ Use these taxonomies and attributes to classify the data types in the eShopLite 
 
 https://learn.microsoft.com/en-us/training/modules/dotnet-compliance-cloud-native-applications/4-redact-sensitive-data-cloud-native-application
 
+Redaction is the process of removing sensitive information from a message. For example, you might want to redact a user's name from a log message. Or you might want to redact a user's IP address from a telemetry event
 The .NET logging framework provides a simple way to redact data in log messages. The Microsoft.Extensions.Compliance.Abstractions package enhances logging to include a Redactor class that redacts data
 
+There are four steps you need to take to enable redaction in your app:
+
+Add the Microsoft.Extensions.Compliance.Redaction NuGet package to each project.
+```bash
+dotnet add package Microsoft.Extensions.Compliance.Redaction
+dotnet add package Microsoft.Extensions.AuditReports
+dotnet add package Microsoft.Extensions.Telemetry
+dotnet add package OpenTelemetry.Instrumentalization.AspNetCore
+dotnet add package OpenTelemetry.Instrumentalization.Http
+dotnet add package System.Text.Json
+```
+Add the redaction service to the dependency injection container.
+```csharp
+using Microsoft.Extensions.Compliance.Classification;
+using Microsoft.Extensions.Compliance.Redaction;
+...
+builder.Services.AddRedaction();
+```
+Choose which redaction implementation to use for each type of classified data.
+Enable redaction in the logging framework.
+
+https://learn.microsoft.com/en-us/training/modules/dotnet-compliance-cloud-native-applications/5-exercise-redact-sensitive-data-cloud-native-application
+
+Select the PORTS tab, then select the Open in Browser globe icon for the Front End (32000) port.
+
+Select the Products link. Add some products to your shopping basket.
+
+Select the Buy Basket button.
+
+Search in the terminal for the log
+
+    frontendcontainer  | {"EventId":1,"LogLevel":"Information","Category":"Store.Services.ProductService","Message":"Placed Order: DataEntities.Order","State":{"Message":"Microsoft.Extensions.Logging.ExtendedLogger\u002BModernTagJoiner","{OriginalFormat}":"Placed Order: {order}","order.Total":0,"order.Products":"[\u0022DataEntities.Product\u0022]","order":"DataEntities.Order","order.CustomerAddress":"*****","order.CustomerName":"*****","order.Id":""}}
+
+You should see this JSON formatted log entry. Notice that the order.Total value is in the logs, but the CustomerName and CustomerAddress values are empty strings.
+
+By default, if you don't specify a redaction implementation, the redaction engine will use the ErasingRedactor implementation to ensure no sensitive data is leaked into the logs.
 
 # Resiliency approaches
 
