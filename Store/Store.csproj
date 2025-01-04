@@ -7,6 +7,8 @@
     <LangVersion>preview</LangVersion>
     <UserSecretsId>9955295d-fbbe-4a12-a684-462fb6ff7d58</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateComplianceReport>true</GenerateComplianceReport>
+    <ComplianceReportOutputPath>$(MSBuildThisFileDirectory)\..\ComplianceReport\Store</ComplianceReportOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

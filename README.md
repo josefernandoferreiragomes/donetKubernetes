@@ -531,7 +531,7 @@ dotnet add package OpenTelemetry.Instrumentalization.AspNetCore
 dotnet add package OpenTelemetry.Instrumentalization.Http
 dotnet add package System.Text.Json
 ```
-Add the redaction service to the dependency injection container.
+Add the redaction service to the dependency injection container, to be able to redact sensitive data only.
 ```csharp
 using Microsoft.Extensions.Compliance.Classification;
 using Microsoft.Extensions.Compliance.Redaction;
@@ -556,6 +556,28 @@ Search in the terminal for the log
 You should see this JSON formatted log entry. Notice that the order.Total value is in the logs, but the CustomerName and CustomerAddress values are empty strings.
 
 By default, if you don't specify a redaction implementation, the redaction engine will use the ErasingRedactor implementation to ensure no sensitive data is leaked into the logs.
+
+### Generate compliance reports for an annotated cloud-native app
+
+Compliance departments need to be able to review code and compliance reports to ensure that the application is compliant with the company's policies. The .NET compliance framework provides a way to generate reports that show the compliance status of the application.
+
+In Store and DataEntities projects, add package
+```bash
+dotnet add package Microsoft.Extensions.AuditReports
+```
+
+In Store and DataEntities projects, Add in the csproj
+```xml
+<GenerateComplianceReport>true</GenerateComplianceReport>
+<ComplianceReportOutputPath>$(MSBuildThisFileDirectory)\..\ComplianceReport\Store</ComplianceReportOutputPath>
+```
+The above code tells the compiler to generate a compliance report for this project and to save the ComplianceReport.json file to a folder called ComplianceReport/Store in the parent folder
+
+New generated files ComplianceReport.json to hold the compliance report
+
+### Implement feature flags
+
+https://learn.microsoft.com/en-us/training/modules/microservices-configuration-aspnet-core/
 
 # Resiliency approaches
 
