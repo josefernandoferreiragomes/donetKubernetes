@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flagsmith" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.AuditReports" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Compliance.Redaction" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Telemetry" Version="9.0.0" />

@@ -1,0 +1,28 @@
+﻿
+{
+    "Name": "Store",
+    "Types": [
+        {
+            "Name": "Store.Services.Log",
+            "Logging Methods": [
+                {
+                    "Name": "LogOrders",
+                    "Parameters": [
+                        {
+                            "Name": "logger",
+                            "Type": "Microsoft.Extensions.Logging.ILogger",
+                            "File": "C:\\Users\\josef\\source\\repos\\dotnetKubernetes\\Store\\Services\\ProductService.cs",
+                            "Line": "122"
+                        },
+                        {
+                            "Name": "order",
+                            "Type": "DataEntities.Order",
+                            "File": "C:\\Users\\josef\\source\\repos\\dotnetKubernetes\\Store\\Services\\ProductService.cs",
+                            "Line": "122"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

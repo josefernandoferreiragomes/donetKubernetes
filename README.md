@@ -579,6 +579,48 @@ New generated files ComplianceReport.json to hold the compliance report
 
 https://learn.microsoft.com/en-us/training/modules/microservices-configuration-aspnet-core/
 
+https://learn.microsoft.com/en-us/training/modules/microservices-configuration-aspnet-core/2-review-app-configuration
+
+https://learn.microsoft.com/en-us/training/modules/microservices-configuration-aspnet-core/3-implement-feature-management
+
+Instead of Azure App Configuration, use the following tool to implement feature flags
+
+https://github.com/Flagsmith/flagsmith?form=MG0AV3
+
+docker-compose updated to include flagsmith (copied from their docker-compose)
+
+after build and up, flagsmith will output a super user like admin@example.com
+and a url to set password
+http://localhost:8000/password-reset/confirm/MQ/cj9ka3-7a79f6375fba769f7ee8ffa121cb36e5
+
+Will also provide a deafult project, with a default environment, and a default feature flag
+
+It will ask to name the environment
+
+It will then ask to create a feature flag
+For example "test", with the value of "1"
+
+it will run at a link such as:
+http://localhost:8000/project/1/environment/UQzW6U824wfvNQRBHxYdog/features
+
+How to use inside .Net
+https://docs.flagsmith.com/clients/server-side?language=dotnet
+
+get local default api key
+http://localhost:8000/project/1/environment/UQzW6U824wfvNQRBHxYdog/sdk-keys
+something like "UQzW6U824wfvNQRBHxYdog"
+
+add to Site project
+```bash
+dotnet add package Flagsmith
+```
+
+Other similar feature flag tools:
+
+https://github.com/open-feature/open-feature-operator?form=MG0AV3
+
+https://configcat.com/docs/api/reference/configcat-public-management-api/
+
 # Resiliency approaches
 
 #### Retry

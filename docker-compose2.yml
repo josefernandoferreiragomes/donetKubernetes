@@ -1,83 +1,10 @@
----
-
-services: 
-
-  frontend:
-    #image: josefernandoferreiragomes/storeimage:latest
-    container_name: frontendcontainer
-    build:
-      context: .  # Path to the website project folder
-      dockerfile: /Store/Dockerfile  # Dockerfile for the website
-    ports:
-      - "32030:8080"
-      - "32031:8081"
-    depends_on: 
-      - backend
-      - prometheus
-      - zipkin
-      - flagsmith
-    networks:
-      - mynetwork
-    environment: 
-      - ProductEndpoint=http://backend:8080
-      - ZIPKIN_URL=http://zipkin:9411 
-  
-  backend:
-    #image: josefernandoferreiragomes/productservice:latest
-    container_name: backendcontainer
-    build:
-      context: .  # Path to the web API project folder
-      dockerfile: "./Products/Dockerfile"  # Dockerfile for the web API
-    ports: 
-      - "32020:8080"
-      - "32021:8081"
-    networks:
-      - mynetwork
-    depends_on: 
-      - prometheus
-      - zipkin
-      - flagsmith
-    environment: 
-      - ZIPKIN_URL=http://zipkin:9411    
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - 9090:9090
-    restart: unless-stopped
-    volumes:
-      - ./prometheus:/etc/prometheus
-    networks:
-      - mynetwork
-    environment: 
-      - ZIPKIN_URL=http://zipkin:9411    
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - 3000:3000
-    restart: unless-stopped
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=grafana
-    volumes:
-      - ./grafana/datasource:/etc/grafana/provisioning/datasources 
-    networks:
-      - mynetwork
-  
-  zipkin:
-    image: openzipkin/zipkin
-    ports:
-      - 9411:9411
-    networks:
-      - mynetwork    
 # See https://docs.flagsmith.com/deployment/docker for more information on running Flagsmith in Docker
 # This Docker Compose file will run the entire Flagsmith Platform
 
+volumes:
+  pgdata:
+
+services:
   postgres:
     image: postgres:15.5-alpine
     environment:
@@ -151,11 +78,3 @@ services:
       flagsmith:
         condition: service_healthy
     command: run-task-processor
-
-volumes:
-  pgdata:
-    
-networks:
-  mynetwork:
-    driver: bridge
-    name: mynetworkname

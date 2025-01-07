@@ -2,6 +2,7 @@ using Store.Components;
 using Store.Services;
 using Microsoft.Extensions.Compliance.Classification;
 using Microsoft.Extensions.Compliance.Redaction;
+using Flagsmith;
 
 //using Microsoft.Extensions.Http.Resilience;
 
@@ -46,6 +47,10 @@ builder.Services.AddLogging(logging =>
     logging.EnableRedaction();
     logging.AddJsonConsole(); //Enable structure logs on the console to view the redacted data.
 });
+
+var apiKey = builder.Configuration["Flagsmith:EnvironmentKey"]; 
+var apiUrl = builder.Configuration["Flagsmith:ApiUrl"]; 
+builder.Services.AddSingleton(new FlagsmithProxy(apiKey, apiUrl));
 
 var app = builder.Build();
 

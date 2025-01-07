@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flagsmith-service
+spec:
+  selector:
+    app: flagsmith
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+--- 
+kind: Deployment
+metadata:
+  name: flagsmith-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flagsmith
+  template:
+    metadata:
+      labels:
+        app: flagsmith
+    spec:
+      containers:
+        - name: flagsmith
+          image: flagsmith/flagsmith-server
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DJANGO_DB__ENGINE
+              value: django.db.backends.postgresql
+            - name: DJANGO_DB__NAME
+              value: flagsmith
+            - name: DJANGO_DB__USER
+              value: flagsmith
+            - name: DJANGO_DB__PASSWORD
+              value: flagsmith
+            - name: DJANGO_DB__HOST
+              value: db
+            - name: DJANGO_DB__PORT
+              value: "5432"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "*"
+            - name: DJANGO_SECRET_KEY
+              value: your-secret-key
+      restartPolicy: Always
+
