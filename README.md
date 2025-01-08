@@ -638,6 +638,12 @@ docker-compose build frontend
 docker-compose up frontend
 ```
 
+Troubleshooting tips
+It may occur that the json object being received is not being deserialized correctly
+In this case, it was necessary to replace JObject.Parse with JArray.Parse, because it was an array of objects ([{ ... }])
+And it was also necessary to html decode the string, as it was being received as a string with html encoding
+
+
 Other similar feature flag tools:
 
 https://github.com/open-feature/open-feature-operator?form=MG0AV3

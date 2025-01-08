@@ -107,7 +107,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        saleOn = await FlagsmithHttpProxy.IsFeatureEnabledAsync("test");
+        saleOn = await FlagsmithHttpProxy.IsFeatureEnabledAsync("testFeature");
 
         // Simulate asynchronous loading to demonstrate streaming rendering
         products = await ProductService.GetProducts();
