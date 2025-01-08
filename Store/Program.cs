@@ -48,9 +48,17 @@ builder.Services.AddLogging(logging =>
     logging.AddJsonConsole(); //Enable structure logs on the console to view the redacted data.
 });
 
-var apiKey = builder.Configuration["Flagsmith:EnvironmentKey"]; 
-var apiUrl = builder.Configuration["Flagsmith:ApiUrl"]; 
-builder.Services.AddSingleton(new FlagsmithProxy(apiKey, apiUrl));
+// Retrieve configuration values for apiKey and apiUrl
+var configuration = builder.Configuration;
+var apiKey = configuration["Flagsmith:EnvironmentKey"];
+var apiUrl = configuration["Flagsmith:ApiUrl"];
+
+// Register the FlagsmithHttpProxy as a singleton
+builder.Services.AddSingleton<FlagsmithHttpProxy>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<FlagsmithHttpProxy>>();
+    return new FlagsmithHttpProxy(logger, apiKey, apiUrl);
+});
 
 var app = builder.Build();
 

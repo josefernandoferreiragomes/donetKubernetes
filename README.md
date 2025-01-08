@@ -615,6 +615,29 @@ add to Site project
 dotnet add package Flagsmith
 ```
 
+testing the feature flag service connectivity
+```bash
+docker exec -u root d29c355f3f12 apt update
+docker exec -u root d29c355f3f12 apt install -y curl
+docker exec -u root d29c355f3f12 apt install -y net-tools
+docker exec -u root d29c355f3f12 netstat -tuln
+
+docker exec -u root d29c355f3f12 curl -i 'http://flagsmith:8000/api/v1/flags/' -H 'x-environment-key: UQzW6U824wfvNQRBHxYdog'
+```
+
+Approach using a customized http client:
+add dependencies
+```bash
+dotnet add package System.Net.Http
+dotnet add package Newtonsoft.Json
+```
+
+Update only the frontend project
+```bash
+docker-compose build frontend
+docker-compose up frontend
+```
+
 Other similar feature flag tools:
 
 https://github.com/open-feature/open-feature-operator?form=MG0AV3
