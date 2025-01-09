@@ -5,12 +5,26 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Web;
+using System.Reflection.Metadata.Ecma335;
 
 public class FlagsmithHttpProxy
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
     private readonly ILogger<FlagsmithHttpProxy> _logger;
+
+    private JArray? jArrayFlags = null;
+    public JArray JArrayFlags
+    {
+        get
+        {
+            if (jArrayFlags == null)
+            {
+                jArrayFlags = GetFeatureFlagsAsync().Result;
+            }
+            return jArrayFlags;
+        }
+    }
 
     public FlagsmithHttpProxy(ILogger<FlagsmithHttpProxy> logger, string apiKey, string apiUrl)
     {
@@ -54,9 +68,24 @@ public class FlagsmithHttpProxy
         }
     }
 
+    public async Task<decimal> GetFeatureValue(string featureKey)
+    {
+        decimal value = 0;
+        var flags = JArrayFlags;
+        foreach (var flag in flags)
+        {
+            if (flag["feature"]?["name"]?.ToString() == featureKey)
+            {
+                var stringValue = flag["feature_state_value"]?.Value<string>() ?? "0";
+                decimal.TryParse(stringValue, out value);
+            }
+        }
+        return value;
+    }
+
     public async Task<bool> IsFeatureEnabledAsync(string featureKey)
     {
-        var flags = await GetFeatureFlagsAsync();
+        var flags = JArrayFlags;
         foreach (var flag in flags)
         {
             if (flag["feature"]?["name"]?.ToString() == featureKey)

@@ -650,6 +650,93 @@ https://github.com/open-feature/open-feature-operator?form=MG0AV3
 
 https://configcat.com/docs/api/reference/configcat-public-management-api/
 
+filter docker logs
+```bash
+docker logs 8bb9f2abbfb9 2>&1 | grep Starting
+```
+
+### Add kibana for http logs and metrics, and troubleshooting - Experimental !!!
+
+https://medium.com/@vosarat1995/elastic-stack-with-docker-getting-started-elasticsearch-kibana-and-filebeat-ebe75fd13041
+
+Add the necessary configurations on docker-compose, for kibana, filebeat and elasticsearch
+
+Add the filebeat.yml file (with read only permissions) to the root of the project, and configure it to send logs to elasticsearch
+
+change permission to filebeat.yml
+```bash
+Set-ItemProperty -Path "filebeat.yml" -Name IsReadOnly -Value $true
+```
+
+to re-edit the file:
+```bash
+Set-ItemProperty -Path "filebeat.yml" -Name IsReadOnly -Value $false
+```
+
+Filebeat comes with prebuilt Kibana dashboards and index templates for visualizing logs. 
+To load these, run the following command from the Filebeat container (it takes a while)
+```bash
+docker exec -it 919b9ad1ca22 filebeat setup --dashboards
+```
+
+check the existing templates
+```bash
+curl -XGET http://localhost:9200/_cat/templates?v
+```
+
+Run the Filebeat setup command to apply the index template
+```bash
+docker exec -it 919b9ad1ca22 filebeat setup -e
+```
+
+verify Kibana's status by trying to access it from your browser or via curl:
+
+```bash
+curl -X http://localhost:5601/api/status
+```
+
+verify filebeat logs
+```bash
+docker logs 919b9ad1ca22
+```
+verify filebeat connectivity
+```bash
+docker exec -it 4c854178350a curl -XGET http://elasticsearch:9200
+```
+
+Filebeat exposes metrics that can help debug issues. Access the metrics endpoint:
+```bash
+docker exec -it e62de10ad8b0 curl -XGET http://localhost:5066/stats | jq
+
+```
+
+verify health
+```bash
+curl -XGET http://localhost:9200/_cluster/health?pretty
+```
+
+
+
+verify elasticsearch logs
+```bash
+curl
+http://localhost:9200/_cat/indices?v
+```
+
+verify elasticsearch disk space
+```bash
+docker exec 919b9ad1ca22 df -h
+```
+
+open kibana on browser
+http://localhost:5601
+
+troubleshooting
+```bash
+cd /mnt/c/users/josef/source/repos/dotnetkubernetes
+```
+
+
 # Resiliency approaches
 
 #### Retry

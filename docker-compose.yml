@@ -5,6 +5,8 @@ services:
   frontend:
     #image: josefernandoferreiragomes/storeimage:latest
     container_name: frontendcontainer
+    labels: 
+      - "com.docker.compose.service=frontend"
     build:
       context: .  # Path to the website project folder
       dockerfile: /Store/Dockerfile  # Dockerfile for the website
@@ -27,6 +29,8 @@ services:
   backend:
     #image: josefernandoferreiragomes/productservice:latest
     container_name: backendcontainer
+    labels: 
+      - "com.docker.compose.service=backend"
     build:
       context: .  # Path to the web API project folder
       dockerfile: "./Products/Dockerfile"  # Dockerfile for the web API
@@ -158,10 +162,55 @@ services:
         condition: service_healthy
     command: run-task-processor
     networks:
-      - mynetwork
+      - mynetwork  
+  
+  # THE BELOW SERVICES ARE OPTIONAL AND CAN BE UNCOMMENTED IF YOU WANT TO USE THEM, BUT THEY'RE STILL EXPERIMENTAL
+  # elasticsearch:
+  #   image: elasticsearch:7.2.0
+  #   environment:    
+  #     - ES_JAVA_OPTS=-Xms2g -Xmx2g # Set heap size to 2 GB
+  #     - discovery.type=single-node
+  #   ports:
+  #     - "9200:9200"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   mem_limit: 4g # Set memory limit explicitly
+  #   mem_reservation: 2g # Reserve a baseline memory
+  #   volumes:
+  #     - elasticsearch_data:/usr/share/elasticsearch/data
+  #   networks:
+  #     - mynetwork
+
+  # kibana:
+  #   image: kibana:7.2.0
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     - mynetwork
+
+  # filebeat:
+  #   image: docker.elastic.co/beats/filebeat:7.2.0
+  #   volumes:
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+  #   ports:
+  #     - "5066:5066"
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - elasticsearch
+  #     - frontend
 
 volumes:
   pgdata:
+  # elasticsearch_data:
     
 networks:
   mynetwork:

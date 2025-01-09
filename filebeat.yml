@@ -1,0 +1,19 @@
+#EXPERIMENTAL: This is an experimental feature. The configuration options here may change at any time.
+
+filebeat.inputs:
+  - type: container    
+    paths:
+    - /var/lib/docker/containers/*/*.log
+
+logging.level: debug
+
+setup.template.name: "filebeat"
+
+setup.template.pattern: "filebeat-*"
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "filebeat-%{+YYYY.MM.dd}"
+
+setup.kibana:
+  host: "http://kibana:5601"
