@@ -655,6 +655,12 @@ filter docker logs
 docker logs 8bb9f2abbfb9 2>&1 | grep Starting
 ```
 
+### Deploy a cloud-native .NET microservice automatically with GitHub Actions and Azure Pipelines
+
+https://learn.microsoft.com/en-us/training/modules/microservices-devops-aspnet-core/2-exercise-manually-deploy-cloud-native-application
+
+
+
 ### Add kibana for http logs and metrics, and troubleshooting - Experimental !!!
 
 https://medium.com/@vosarat1995/elastic-stack-with-docker-getting-started-elasticsearch-kibana-and-filebeat-ebe75fd13041
