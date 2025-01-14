@@ -1,0 +1,49 @@
+name: Deploy to Local Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Build Docker images
+      - name: Build Docker Images
+        run: |
+          docker build -t localhost:5000/my-app:latest ./app
+          docker build -t localhost:5000/my-prometheus-config:latest ./prometheus
+
+      # Step 4: Push images to local Docker registry
+      - name: Push Images to Local Registry
+        run: |
+          docker push localhost:5000/my-app:latest
+          docker push localhost:5000/my-prometheus-config:latest
+
+      # Step 5: Apply Kubernetes manifests
+      - name: Apply Kubernetes Manifests
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+      # Step 6: Wait for Pods to be ready
+      - name: Wait for Deployment to Complete
+        run: |
+          kubectl rollout status deployment/my-app-deployment --timeout=60s
+
+      # Step 7: Run tests to validate deployment
+      - name: Validate Deployment
+        run: |
+          kubectl exec $(kubectl get pod -l app=my-app -o jsonpath="{.items[0].metadata.name}") -- curl -f http://localhost:8080/health
